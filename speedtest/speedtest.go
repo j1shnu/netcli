@@ -83,8 +83,8 @@ func startTest(servers Servers, savingMode bool, jsonOutput bool) {
 
 func testDownload(server *Server, savingMode bool) error {
 	quit := make(chan bool)
-	fmt.Printf("Download Test: ")
-	go dots(quit, "<")
+	fmt.Printf("Download Test : ")
+	go dots(quit, "//")
 	err := server.DownloadTest(savingMode)
 	quit <- true
 	if err != nil {
@@ -96,8 +96,8 @@ func testDownload(server *Server, savingMode bool) error {
 
 func testUpload(server *Server, savingMode bool) error {
 	quit := make(chan bool)
-	fmt.Printf("Upload Test: ")
-	go dots(quit, ">")
+	fmt.Printf("Upload Test   : ")
+	go dots(quit, "\\\\")
 	err := server.UploadTest(savingMode)
 	quit <- true
 	if err != nil {

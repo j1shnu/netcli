@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"net-cli/helpers"
-	"net-cli/speedtest"
+	"net-cli/speedtest" // Thanks to https://github.com/showwin/speedtest-go
 
 	"github.com/urfave/cli/v2"
 )
@@ -45,10 +45,19 @@ func main() {
 		},
 	}
 
+	domainFlag := []cli.Flag{
+		&cli.StringFlag{
+			Name:        "domain",
+			Aliases:     []string{"d"},
+			Usage:       "Enter the domain name. Egs:- google.com",
+			DefaultText: "google.com",
+		},
+	}
+
 	app.Commands = []*cli.Command{
 		{
-			Name:    "ns",
-			Aliases: []string{"nameserver"},
+			Name:    "nameserver",
+			Aliases: []string{"ns"},
 			Usage:   "Print the nameserver of given hostname.(NS RECORD)",
 			Flags:   defaultFlag,
 			Action: func(c *cli.Context) error {
@@ -60,8 +69,8 @@ func main() {
 			},
 		},
 		{
-			Name:    "mx",
-			Aliases: []string{"mailserver"},
+			Name:    "mailserver",
+			Aliases: []string{"mx"},
 			Usage:   "Print the mail server of given hostname.(MX RECORD)",
 			Flags:   defaultFlag,
 			Action: func(c *cli.Context) error {
@@ -108,6 +117,18 @@ func main() {
 			Flags: speedTestFlags,
 			Action: func(c *cli.Context) error {
 				speedtest.SpeedTest(c.Bool("saving-mode"), c.Bool("json"))
+				return nil
+			},
+		},
+		{
+			Name:    "subdomain",
+			Aliases: []string{"subd"},
+			Flags:   domainFlag,
+			Action: func(c *cli.Context) error {
+				subDomains := helpers.GetSubdomains(c.String("domain"))
+				for _, i := range subDomains {
+					fmt.Println(i)
+				}
 				return nil
 			},
 		},

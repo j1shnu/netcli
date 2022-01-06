@@ -48,6 +48,8 @@ func main() {
 	domainFlag := []cli.Flag{
 		&cli.StringFlag{
 			Name:        "domain",
+			Required:    true,
+			Value:       "",
 			Aliases:     []string{"d"},
 			Usage:       "Enter the domain name. Egs:- google.com",
 			DefaultText: "google.com",

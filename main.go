@@ -13,7 +13,7 @@ import (
 func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
-		Usage:   "Tool to get net infos from CLI",
+		Usage:   "A lightweight network tool",
 		Version: "v0.1",
 		Authors: []*cli.Author{
 			{
@@ -26,6 +26,7 @@ func main() {
 	defaultFlag := []cli.Flag{
 		&cli.StringFlag{
 			Name:        "host",
+			Usage:       "Enter hostname",
 			Required:    true,
 			Value:       "",
 			DefaultText: "github.com",

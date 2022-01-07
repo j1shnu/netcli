@@ -32,6 +32,7 @@ func GetSubdomains(domain string) []string {
 	if !domainValidate(domain) {
 		log.Fatal("Invalid Domain Name.")
 	}
+	fmt.Printf("Fetching Subdomain of %v ...\n\n", domain)
 	subDomains := fetchSubdomains(domain)
 	return removeDuplicates(subDomains, domain)
 }

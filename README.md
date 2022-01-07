@@ -1,5 +1,5 @@
 # NetCLI
-A Lightweight network tool, which helps you multiple things.
+A Lightweight network tool, which helps you do multiple things.
 
 ## Features
 > Some features are still under development.

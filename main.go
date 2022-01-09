@@ -14,7 +14,7 @@ func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
 		Usage:   "A lightweight network tool",
-		Version: "v0.1",
+		Version: "v0.1.1",
 		Authors: []*cli.Author{
 			{
 				Name:  "Jishnu Prasad K P",

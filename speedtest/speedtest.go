@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net-cli/helpers"
+	"netcli/helpers"
 	"time"
 )
 

@@ -5,7 +5,8 @@
 *.dll
 *.so
 *.dylib
-net-cli
+bin/
+netcli
 
 # Test binary, built with `go test -c`
 *.test

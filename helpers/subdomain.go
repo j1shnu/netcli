@@ -3,9 +3,7 @@ package helpers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"regexp"
 	"strings"
 )
@@ -32,22 +30,17 @@ func GetSubdomains(domain string) []string {
 	if !domainValidate(domain) {
 		log.Fatal("Invalid Domain Name.")
 	}
-	fmt.Printf("Fetching Subdomain of %v ...\n\n", domain)
+	fmt.Printf("Fetching Subdomains of %v ...\n\n", domain)
 	subDomains := fetchSubdomains(domain)
-	return removeDuplicates(subDomains, domain)
-}
-
-func getData(baseUrl string) []byte {
-	resp, err := http.Get(baseUrl)
-	ErrorHandler(err)
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
-	ErrorHandler(err)
-	return data
+	filterdSubDomains := removeDuplicates(subDomains, domain)
+	if len(filterdSubDomains) == 0 {
+		return []string{"No Subdomains found."}
+	}
+	return filterdSubDomains
 }
 
 func fetchSubdomains(domain string) []string {
-	data := getData(fmt.Sprintf("https://crt.sh/?q=%v&output=json", domain))
+	data := GetData(fmt.Sprintf("https://crt.sh/?q=%v&output=json", domain))
 	crtDomainDatas := make([]domainData, 0)
 	json.Unmarshal([]byte(string(data)), &crtDomainDatas)
 	var crtSubDomains []string
@@ -55,9 +48,9 @@ func fetchSubdomains(domain string) []string {
 		split_subd := strings.Split(subdomains.NameValue, "\n")
 		crtSubDomains = append(crtSubDomains, split_subd...)
 	}
-	api := getData("https://pastebin.com/raw/9nYue4Dh")
+	api := GetData("https://pastebin.com/raw/9nYue4Dh")
 	baseURL := "https://www.virustotal.com/vtapi/v2/domain/report?apikey=" + string(api) + "&domain=" + domain
-	data1 := getData(baseURL)
+	data1 := GetData(baseURL)
 	var vtDomainDatas domainData
 	json.Unmarshal(data1, &vtDomainDatas)
 	return append(crtSubDomains, vtDomainDatas.Subdomains...)

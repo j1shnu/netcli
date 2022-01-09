@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"netcli/helpers"
-	"netcli/speedtest" // Thanks to https://github.com/showwin/speedtest-go
+	"netcli/speedtest"
 
 	"github.com/urfave/cli/v2"
 )

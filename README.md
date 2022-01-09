@@ -28,3 +28,9 @@ COMMANDS:
    shorten, short    URL shortener to reduce a long link.
    help, h           Shows a list of commands or help for one command
 ```
+
+## Build and Run using Makefile
+- `make run` to run the application.
+- `make build` to build for your OS and platform.
+- `make compile` to compile for most OS and platform.
+- `make clean` to clean build files and golang cache.

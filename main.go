@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"net-cli/helpers"
-	"net-cli/speedtest"
+	"net-cli/speedtest" // Thanks to https://github.com/showwin/speedtest-go
 
 	"github.com/urfave/cli/v2"
 )
@@ -13,8 +13,8 @@ import (
 func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
-		Usage:   "Tool to get net infos from CLI",
-		Version: "v0.1.0",
+		Usage:   "A lightweight network tool",
+		Version: "v0.1.1",
 		Authors: []*cli.Author{
 			{
 				Name:  "Jishnu Prasad K P",
@@ -26,6 +26,7 @@ func main() {
 	defaultFlag := []cli.Flag{
 		&cli.StringFlag{
 			Name:        "host",
+			Usage:       "Enter hostname",
 			Required:    true,
 			Value:       "",
 			DefaultText: "github.com",
@@ -45,10 +46,21 @@ func main() {
 		},
 	}
 
+	domainFlag := []cli.Flag{
+		&cli.StringFlag{
+			Name:        "domain",
+			Required:    true,
+			Value:       "",
+			Aliases:     []string{"d"},
+			Usage:       "Enter the domain name. Egs:- google.com",
+			DefaultText: "google.com",
+		},
+	}
+
 	app.Commands = []*cli.Command{
 		{
-			Name:    "ns",
-			Aliases: []string{"nameserver"},
+			Name:    "nameserver",
+			Aliases: []string{"ns"},
 			Usage:   "Print the nameserver of given hostname.(NS RECORD)",
 			Flags:   defaultFlag,
 			Action: func(c *cli.Context) error {
@@ -60,8 +72,8 @@ func main() {
 			},
 		},
 		{
-			Name:    "mx",
-			Aliases: []string{"mailserver"},
+			Name:    "mailserver",
+			Aliases: []string{"mx"},
 			Usage:   "Print the mail server of given hostname.(MX RECORD)",
 			Flags:   defaultFlag,
 			Action: func(c *cli.Context) error {
@@ -108,6 +120,18 @@ func main() {
 			Flags: speedTestFlags,
 			Action: func(c *cli.Context) error {
 				speedtest.SpeedTest(c.Bool("saving-mode"), c.Bool("json"))
+				return nil
+			},
+		},
+		{
+			Name:    "subdomain",
+			Aliases: []string{"subd"},
+			Flags:   domainFlag,
+			Action: func(c *cli.Context) error {
+				subDomains := helpers.GetSubdomains(c.String("domain"))
+				for _, i := range subDomains {
+					fmt.Println(i)
+				}
 				return nil
 			},
 		},

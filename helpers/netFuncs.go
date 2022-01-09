@@ -1,16 +1,35 @@
 package helpers
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
+	"net/url"
+	"os"
+
+	"github.com/likexian/whois"
 )
 
 func ErrorHandler(err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
+}
+
+// Get data from URL or API
+func GetData(baseUrl string) []byte {
+	resp, err := http.Get(baseUrl)
+	ErrorHandler(err)
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
+	ErrorHandler(err)
+	if resp.StatusCode != http.StatusOK {
+		fmt.Fprintln(os.Stderr, string(data))
+		os.Exit(2)
+	}
+	return data
 }
 
 func GetNS(url string) []*net.NS {
@@ -38,10 +57,18 @@ func GetCNAME(url string) string {
 }
 
 func GetMyIP() string {
-	res, err := http.Get("http://ifconfig.me")
-	ErrorHandler(err)
-	defer res.Body.Close()
-	myIP, err := ioutil.ReadAll(res.Body)
-	ErrorHandler(err)
+	myIP := GetData("http://ifconfig.me")
 	return string(myIP)
+}
+
+func Whois(host string) string {
+	result, err := whois.Whois(host)
+	ErrorHandler(err)
+	return result
+}
+
+func UrlShorten(longUrl string) string {
+	baseUrl := "http://is.gd/api.php?longurl=" + url.QueryEscape(longUrl)
+	isGDUrl := GetData(baseUrl)
+	return string(isGDUrl)
 }

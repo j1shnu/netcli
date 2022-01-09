@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"net-cli/helpers"
-	"net-cli/speedtest" // Thanks to https://github.com/showwin/speedtest-go
+	"netcli/helpers"
+	"netcli/speedtest" // Thanks to https://github.com/showwin/speedtest-go
 
 	"github.com/urfave/cli/v2"
 )
@@ -54,6 +54,16 @@ func main() {
 			Aliases:     []string{"d"},
 			Usage:       "Enter the domain name. Egs:- google.com",
 			DefaultText: "google.com",
+		},
+	}
+
+	urlFlag := []cli.Flag{
+		&cli.StringFlag{
+			Name:     "url",
+			Required: true,
+			Value:    "",
+			Aliases:  []string{"u"},
+			Usage:    "Enter the URL to shorten, Use quotes if your shell not parsing the URL.",
 		},
 	}
 
@@ -115,9 +125,10 @@ func main() {
 			},
 		},
 		{
-			Name:  "speed",
-			Usage: "Do an internet speed test",
-			Flags: speedTestFlags,
+			Name:    "speedtest",
+			Aliases: []string{"speed"},
+			Usage:   "Do an internet speed test.",
+			Flags:   speedTestFlags,
 			Action: func(c *cli.Context) error {
 				speedtest.SpeedTest(c.Bool("saving-mode"), c.Bool("json"))
 				return nil
@@ -126,12 +137,32 @@ func main() {
 		{
 			Name:    "subdomain",
 			Aliases: []string{"subd"},
+			Usage:   "Scans an entire domain to find as many subdomains as possible.",
 			Flags:   domainFlag,
 			Action: func(c *cli.Context) error {
 				subDomains := helpers.GetSubdomains(c.String("domain"))
 				for _, i := range subDomains {
 					fmt.Println(i)
 				}
+				return nil
+			},
+		},
+		{
+			Name:  "whois",
+			Usage: "Get whois information of Domain Name or IP Addres.",
+			Flags: defaultFlag,
+			Action: func(c *cli.Context) error {
+				fmt.Println(helpers.Whois(c.String("host")))
+				return nil
+			},
+		},
+		{
+			Name:    "shorten",
+			Aliases: []string{"short"},
+			Usage:   "URL shortener to reduce a long link.",
+			Flags:   urlFlag,
+			Action: func(c *cli.Context) error {
+				fmt.Println(helpers.UrlShorten(c.String("url")))
 				return nil
 			},
 		},

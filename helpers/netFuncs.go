@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/likexian/whois"
 )
@@ -71,4 +72,17 @@ func UrlShorten(longUrl string) string {
 	baseUrl := "http://is.gd/api.php?longurl=" + url.QueryEscape(longUrl)
 	isGDUrl := GetData(baseUrl)
 	return string(isGDUrl)
+}
+
+func GetHeader(u string) {
+	if !strings.HasPrefix(u, "http") {
+		u = "http://" + u
+	}
+	resp, err := http.Get(u)
+	ErrorHandler(err)
+	defer resp.Body.Close()
+	for k, v := range resp.Header {
+		fmt.Print(k + " : ")
+		fmt.Println(v)
+	}
 }

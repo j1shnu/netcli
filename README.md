@@ -9,8 +9,8 @@ A Lightweight network tool, which helps you do multiple things.
 - [x] Find subdomains.
 - [x] Whois Lookup.
 - [x] URL Shortener.
-- [ ] Email Checker(check validity and reachability).
-- [ ] HTTP Header information.
+- [x] Email Checker(check validity and reachability).
+- [x] HTTP Header information.
 - [ ] Subnet Calculator.
 
 ## Usage
@@ -26,6 +26,8 @@ COMMANDS:
    subdomain, subd   Scans an entire domain to find as many subdomains as possible.
    whois             Get whois information of Domain Name or IP Addres.
    shorten, short    URL shortener to reduce a long link.
+   email             Check if email address is valid.
+   header, head      Enter the web address to check http header
    help, h           Shows a list of commands or help for one command
 ```
 

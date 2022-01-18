@@ -14,7 +14,7 @@ func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
 		Usage:   "A lightweight network tool",
-		Version: "v0.1.2",
+		Version: "v0.1.3",
 		Authors: []*cli.Author{
 			{
 				Name:  "Jishnu Prasad K P",
@@ -64,6 +64,15 @@ func main() {
 			Value:    "",
 			Aliases:  []string{"u"},
 			Usage:    "Enter the URL to shorten, Use quotes if your shell not parsing the URL.",
+		},
+	}
+
+	emailFlag := []cli.Flag{
+		&cli.StringFlag{
+			Name:     "id",
+			Required: true,
+			Value:    "",
+			Usage:    "Enter the Email address to validate",
 		},
 	}
 
@@ -163,6 +172,25 @@ func main() {
 			Flags:   urlFlag,
 			Action: func(c *cli.Context) error {
 				fmt.Println(helpers.UrlShorten(c.String("url")))
+				return nil
+			},
+		},
+		{
+			Name:  "email",
+			Usage: "Check if email address is valid.",
+			Flags: emailFlag,
+			Action: func(c *cli.Context) error {
+				fmt.Println(helpers.EmailChecker(c.String("id")))
+				return nil
+			},
+		},
+		{
+			Name:    "header",
+			Usage:   "Enter the web address to check http header",
+			Aliases: []string{"head"},
+			Flags:   urlFlag,
+			Action: func(c *cli.Context) error {
+				helpers.GetHeader(c.String("url"))
 				return nil
 			},
 		},

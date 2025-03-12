@@ -87,7 +87,7 @@ func main() {
 			Name:     "ip",
 			Required: false,
 			Value:    "",
-			Usage:    "Enter IP Address to check if comes under provided CIDR",
+			Usage:    "Enter IP Address to check if it falls under provided CIDR",
 		},
 	}
 

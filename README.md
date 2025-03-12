@@ -11,7 +11,7 @@ A Lightweight network tool, which helps you do multiple things.
 - [x] URL Shortener.
 - [x] Email Checker(check validity and reachability).
 - [x] HTTP Header information.
-- [ ] Subnet Calculator.
+- [x] Subnet Calculator.
 
 ## Usage
 Simply type `netcli -h` and you'll get to know what options are available and how to use them.
@@ -27,6 +27,7 @@ COMMANDS:
    whois             Get whois information of Domain Name or IP Addres.
    shorten, short    URL shortener to reduce a long link.
    email             Check if email address is valid.
+   subnet            Calculate details about provided CIDR block.
    header, head      Enter the web address to check http header
    help, h           Shows a list of commands or help for one command
 ```

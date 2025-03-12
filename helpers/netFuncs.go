@@ -2,7 +2,7 @@ package helpers
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -24,7 +24,7 @@ func GetData(baseUrl string) []byte {
 	resp, err := http.Get(baseUrl)
 	ErrorHandler(err)
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	ErrorHandler(err)
 	if resp.StatusCode != http.StatusOK {
 		fmt.Fprintln(os.Stderr, string(data))
@@ -58,7 +58,7 @@ func GetCNAME(url string) string {
 }
 
 func GetMyIP() string {
-	myIP := GetData("http://ifconfig.me")
+	myIP := GetData("http://ifconfig.me/ip")
 	return string(myIP)
 }
 

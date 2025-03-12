@@ -14,7 +14,7 @@ func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
 		Usage:   "A lightweight network tool",
-		Version: "v0.1.3",
+		Version: "v0.1.4",
 		Authors: []*cli.Author{
 			{
 				Name:  "Jishnu Prasad K P",
@@ -73,6 +73,21 @@ func main() {
 			Required: true,
 			Value:    "",
 			Usage:    "Enter the Email address to validate",
+		},
+	}
+
+	subnetFlag := []cli.Flag{
+		&cli.StringFlag{
+			Name:     "cidr",
+			Required: true,
+			Value:    "",
+			Usage:    "Enter the CIDR block(e.g., 192.168.1.0/24)",
+		},
+		&cli.StringFlag{
+			Name:     "ip",
+			Required: false,
+			Value:    "",
+			Usage:    "Enter IP Address to check if it falls under provided CIDR",
 		},
 	}
 
@@ -180,7 +195,39 @@ func main() {
 			Usage: "Check if email address is valid.",
 			Flags: emailFlag,
 			Action: func(c *cli.Context) error {
-				fmt.Println(helpers.EmailChecker(c.String("id")))
+				result := helpers.ValidateEmail(c.String("id"))
+				fmt.Printf("Email: %s\n", result["email"])
+				fmt.Printf("  Valid Format: %t\n", result["validFormat"])
+				fmt.Printf("  Has MX Records: %t\n", result["hasMX"])
+				fmt.Printf("  SMTP Check: %v\n", result["smtpCheck"])
+				fmt.Printf("  Potentially Reachable: %t\n\n", result["reachable"])
+				return nil
+			},
+		},
+		{
+			Name:  "subnet",
+			Usage: "Calculate details about provided CIDR block.",
+			Flags: subnetFlag,
+			Action: func(c *cli.Context) error {
+				result := helpers.CalculateSubnet(c.String("cidr"))
+				fmt.Println("\n=== CIDR IP Range Analysis ===")
+				fmt.Printf("CIDR Notation: %s\n", result["cidr"])
+				fmt.Printf("Network Address: %s\n", result["networkAddr"])
+				fmt.Printf("Usable Host IP Range: %s - %s\n", result["firstUsableIP"], result["lastUsableIP"])
+				fmt.Printf("Broadcast Address: %s\n", result["broadcast"])
+				fmt.Printf("Total Number of Hosts: %.0f\n", result["totalHosts"])
+				fmt.Printf("Number of Usable Hosts: %.0f\n", result["usableHosts"])
+				fmt.Printf("Subnet Mask: %s\n", result["subnetMask"])
+				fmt.Printf("IP Class: %s\n", result["ipClass"])
+				fmt.Printf("IP Type: %s\n", result["ipType"])
+				if c.String("ip") != "" {
+					ipCheck := helpers.IsIPInCIDR(c.String("ip"), c.String("cidr"))
+					if ipCheck {
+						fmt.Printf("\nIP Check Result: \n\t%s is WITHIN the %s range.\n", c.String("ip"), c.String("cidr"))
+					} else {
+						fmt.Printf("\nIP Check Result: \n\t%s is NOT within the %s range.\n", c.String("ip"), c.String("cidr"))
+					}
+				}
 				return nil
 			},
 		},

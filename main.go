@@ -180,7 +180,12 @@ func main() {
 			Usage: "Check if email address is valid.",
 			Flags: emailFlag,
 			Action: func(c *cli.Context) error {
-				fmt.Println(helpers.EmailChecker(c.String("id")))
+				result := helpers.ValidateEmail(c.String("id"))
+				fmt.Printf("Email: %s\n", result["email"])
+				fmt.Printf("  Valid Format: %t\n", result["validFormat"])
+				fmt.Printf("  Has MX Records: %t\n", result["hasMX"])
+				fmt.Printf("  SMTP Check: %v\n", result["smtpCheck"])
+				fmt.Printf("  Potentially Reachable: %t\n\n", result["reachable"])
 				return nil
 			},
 		},

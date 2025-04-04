@@ -2,7 +2,6 @@
 A Lightweight network tool, which helps you do multiple things.
 
 ## Features
-> Some features are still under development.
 - [x] DNS Lookup.
 - [x] Shows your public IP.
 - [x] Internet speed tester. (Thanks to [speedtest-go](https://github.com/showwin/speedtest-go))

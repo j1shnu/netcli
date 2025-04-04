@@ -1,0 +1,47 @@
+name: goreleaser
+
+on:
+  push:
+    tags:
+      - "v0.[0-9].[0-9]"
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+      - name: Release NetCLI
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify on Failure
+        uses: kha7iq/pingme-action@v1
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHANNELS: ${{ secrets.TELEGRAM_CHANNELS }}
+          TELEGRAM_TITLE: "🟢 New Release: ${{ github.ref }}"
+          TELEGRAM_MESSAGE: "Event is triggered by ${{ github.event_name }} ❌  ${{ job.status }}"
+        with:
+          service: telegram
+      - name: Notify on Success
+        uses: kha7iq/pingme-action@v1
+        if: success()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHANNELS: ${{ secrets.TELEGRAM_CHANNELS }}
+          TELEGRAM_TITLE: "🟢 New Release: ${{ github.ref }}"
+          TELEGRAM_MESSAGE: "Event is triggered by ${{ github.event_name }} ✅  ${{ job.status }}"
+        with:
+          service: telegram

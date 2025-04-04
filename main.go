@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
-
+	"net"
 	"netcli/helpers"
 	"netcli/speedtest"
+	"os"
 
 	"github.com/urfave/cli/v2"
 )
@@ -14,7 +14,8 @@ func main() {
 	app := &cli.App{
 		Name:    "Net-CLI",
 		Usage:   "A lightweight network tool",
-		Version: "v0.1.4",
+		Version: "v0.1.5",
+		Suggest: true,
 		Authors: []*cli.Author{
 			{
 				Name:  "Jishnu Prasad K P",
@@ -88,6 +89,27 @@ func main() {
 			Required: false,
 			Value:    "",
 			Usage:    "Enter IP Address to check if it falls under provided CIDR",
+		},
+	}
+
+	serverFlag := []cli.Flag{
+		&cli.IntFlag{
+			Name:     "port",
+			Required: false,
+			Value:    5000,
+			Usage:    "Enter port number to listen the server",
+		},
+		&cli.StringFlag{
+			Name:     "path",
+			Required: false,
+			Value:    "./",
+			Usage:    "Enter path to serve",
+		},
+		&cli.StringFlag{
+			Name:     "host",
+			Required: false,
+			Value:    "127.0.0.1",
+			Usage:    "Enter the host to listen the server",
 		},
 	}
 
@@ -238,6 +260,30 @@ func main() {
 			Flags:   urlFlag,
 			Action: func(c *cli.Context) error {
 				helpers.GetHeader(c.String("url"))
+				return nil
+			},
+		},
+		{
+			Name:    "server",
+			Usage:   "Quick start a HTTP file server from desired path (default: current directory)",
+			Aliases: []string{"fs"},
+			Flags:   serverFlag,
+			Action: func(c *cli.Context) error {
+				if net.ParseIP(c.String("host")) == nil {
+					return cli.Exit(fmt.Sprintf("Invalid IP Address: %v", c.String("host")), 2)
+				}
+				info, err := os.Stat(c.String("path"))
+				if err != nil {
+					return cli.Exit(fmt.Sprintf("Directory '%s' not found.\n", c.String("path")), 3)
+				}
+				if !info.IsDir() {
+					return cli.Exit(fmt.Sprintf("'%s' is not a directory.\n", c.String("path")), 4)
+				}
+				_, err = os.Open(c.String("path"))
+				if err != nil {
+					return cli.Exit(fmt.Sprintf("Does not have read permission to '%s'.\n", c.String("path")), 5)
+				}
+				helpers.FileServer(c.Int("port"), net.ParseIP(c.String("host")), c.String("path"))
 				return nil
 			},
 		},
